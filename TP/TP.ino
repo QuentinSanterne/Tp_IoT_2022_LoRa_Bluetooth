@@ -29,6 +29,8 @@ void connect() {
  while (!client.connect("Jacky")) {
  Serial.print("."); delay(1000);
  }
+ client.subscribe("videoprojecteur/reponse");
+ client.onMessage(messageReceived);
  Serial.println("\nconnected!");
  server.begin();
 }
@@ -45,8 +47,6 @@ void setup() {
  Serial.begin(9600);
  WiFi.begin(ssid,pass);
  client.begin("test.mosquitto.org", net);
- client.subscribe("videoprojecteur/reponse");
- client.onMessage(messageReceived);
  connect();
 }
 
@@ -54,7 +54,7 @@ void loop() {
  client.loop();
  if (millis() - lastMillis > 3000 && etape == 1) { // publish a message every second.
  lastMillis = millis();
- client.publish("/videoprojecteur", WiFi.localIP().toString());
+ client.publish("videoprojecteur", WiFi.localIP().toString());
  Serial.println(WiFi.localIP().toString());
  }
 
